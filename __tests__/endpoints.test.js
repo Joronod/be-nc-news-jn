@@ -30,3 +30,19 @@ describe("Get: /api/topics", ()=>{
         })
     })
 })
+
+describe("GET: /api", ()=>{
+    test.only("200: responds with an object describing all endpoints", ()=>{
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((body)=>{
+            console.log(body);
+            "key" in body;
+            expect("description" in body).toBe(true)
+            expect("queries" in body).toBe(true)
+            expect("exampleResponse" in body).toBe(true)
+                     
+        })
+    })
+})
