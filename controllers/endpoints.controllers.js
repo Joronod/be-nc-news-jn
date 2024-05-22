@@ -1,17 +1,15 @@
-const { selectAllEndpoints } = require("../models/endpoints.models")
+const fs = require("fs/promises")
 
 exports.getAllEndpoints = (req, res, next)=>{
-    return selectAllEndpoints()
-    .then((data)=>{
-        console.log(data)
-        const parsedEndpoints = JSON.parse((data))
-        // console.log(parsedEndpoints)
-        return parsedEndpoints
+    return fs.readdir("../be-nc-news")
+    .then(()=>{
+       return fs.readFile("endpoints.json")
     })
-    .then((parsedEndpoints)=>{
-        res.status(200).send(parsedEndpoints)
+    .then((results)=>{
+        return res.status(200).send({status: 200, msg: JSON.parse(results)})
     })
     .catch((err)=>{
+        console.log(err)
         next(err)
     })
 }
