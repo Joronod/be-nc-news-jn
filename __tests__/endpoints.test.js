@@ -3,7 +3,6 @@ const app = require("../app")
 const db = require("../db/connection");
 const seed = require("../db//seeds/seed");
 const data = require("../db/data/test-data");
-// const Test = require("supertest/lib/test");
 const endpoints = require("../endpoints.json")
 
 
@@ -73,12 +72,47 @@ describe("GET: /api/articles/:article_id", ()=>{
             expect(body.msg).toBe("Not Found")
         })
     })
-    test.only("400: ERROR - responds with an error when an invalid id is used", ()=>{
+    test("400: ERROR - responds with an error when an invalid id is used", ()=>{
         return request(app)
         .get("/api/articles/not-an-id")
         .expect(400)
         .then(({ body })=>{
             expect(body.msg).toBe("Bad request")
+        })
+    })
+})
+
+describe("GET: /api/articles", ()=>{
+    test("200: responds with an array of all stored articles", ()=>{
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body })=>{
+            const { articles } = body;
+            expect(articles).toHaveLength(13)
+            articles.forEach((article)=>{
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String)     
+                })
+            })
+        })
+    })
+    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body })=>{
+            const { articles } = body;
+            expect(articles[0].created_at).toBe("2020-11-03T09:12:00.000Z")
+            expect(articles).toBeSortedBy("created_at", {
+                descending: true
+            })
         })
     })
 })

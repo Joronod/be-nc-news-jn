@@ -11,3 +11,13 @@ exports.getArticleById = (req, res, next) =>{
         next(err)
     })
 }
+
+exports.getAllArticles = (req, res, next) => {
+    return selectAllArticles()
+    .then((articles)=>{
+        res.status(200).send({articles})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
