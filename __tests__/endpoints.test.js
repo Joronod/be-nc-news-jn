@@ -166,4 +166,13 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             expect(body.msg).toBe("Bad request")
         })
     })
+    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+        return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body })=>{
+            const { comments } = body;
+            expect(comments).toEqual([])
+        })
+    })
 })
