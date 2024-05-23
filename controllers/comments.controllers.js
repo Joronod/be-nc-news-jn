@@ -1,6 +1,6 @@
-const { selectCommentsByArticleId } = require("../models/comments.models");
+const { selectCommentsByArticleId, insertNewCommentByArticleId } = require("../models/comments.models");
 const { checkArticleExists } = require("../models/articles.models");
-const { insertNewCommentByArticleId } = require("../models/comments.models")
+const { selectAuthorByUsername } = require("../models/users.models")
 
 exports.getCommentsByArticleId = (req, res, next)=>{
     const { article_id } = req.params;
@@ -21,10 +21,13 @@ exports.getCommentsByArticleId = (req, res, next)=>{
 }
 
 
-exports.postCommentByArticleId = (req, res, next)=>{
+exports.postCommentByArticleId = async (req, res, next)=>{
     const { article_id } = req.params;
     const newComment = req.body
+
+    // const { username, body } = newComment
     
+    // const  author = await selectAuthorByUsername(username)
 
     const promises = [insertNewCommentByArticleId(article_id, newComment), checkArticleExists(article_id)];
    

@@ -6,7 +6,7 @@ exports.selectNumberOfComments = (articleId) => {
     .then(({ rows })=>{
         return rows.length
     }).catch((err)=>{
-        if(err.code = "42P01"){
+        if(err.code === "42P01"){
             return 0
         }else return err
     })
@@ -20,17 +20,19 @@ exports.selectCommentsByArticleId = (articleId) => {
 }
 
 exports.insertNewCommentByArticleId = (article_id, newComment) =>{
-    //created at
-    const votes = 0;
-    const body = newComment.body;
+    console.log(newComment)
+    const body = newComment.body
     const author = newComment.username
+    const article_idAsNum = Number(article_id)
+    const insertValues = [body, author, article_idAsNum]
+    console.log(insertValues)
+
 
     return db.query(
-        `INSERT INTO comments (body, votes, author, article_id)
-        VALUES ($1, $2, $3, $4) RETURNING *;`,
-    [body, votes, author, article_id])
-    .then(({ addedComment })=>{
-        console.log(addedComment, "<---addedcomment")
-        return addedComment[0]
+        `INSERT INTO comments (body, author, article_id)
+        VALUES ($1, $2, $3,) RETURNING body;`, [body, author, article_idAsNum])
+    .then(({ rows })=>{
+        console.log(rows, "<---addedcomment")
+        return rows[0]
     })
 }
