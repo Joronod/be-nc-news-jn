@@ -20,19 +20,12 @@ exports.selectCommentsByArticleId = (articleId) => {
 }
 
 exports.insertNewCommentByArticleId = (article_id, newComment) =>{
-    console.log(newComment)
     const body = newComment.body
     const author = newComment.username
-    const article_idAsNum = Number(article_id)
-    const insertValues = [body, author, article_idAsNum]
-    console.log(insertValues)
-
-
     return db.query(
         `INSERT INTO comments (body, author, article_id)
-        VALUES ($1, $2, $3,) RETURNING body;`, [body, author, article_idAsNum])
+        VALUES ($1, $2, $3) RETURNING *;`, [body, author, article_id])
     .then(({ rows })=>{
-        console.log(rows, "<---addedcomment")
-        return rows[0]
+        return rows[0].body
     })
 }

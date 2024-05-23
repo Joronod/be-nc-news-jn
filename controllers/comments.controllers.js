@@ -25,17 +25,13 @@ exports.postCommentByArticleId = async (req, res, next)=>{
     const { article_id } = req.params;
     const newComment = req.body
 
-    // const { username, body } = newComment
-    
-    // const  author = await selectAuthorByUsername(username)
-
     const promises = [insertNewCommentByArticleId(article_id, newComment), checkArticleExists(article_id)];
    
     Promise.all(promises)
     .then((resolvedPromises)=>{
         console.log(resolvedPromises)
-        const addedComment = resolvedPromises[0];
-        res.status(201).send({ addedComment })
+        const postedComment = resolvedPromises[0];
+        res.status(201).send({ postedComment })
     })
     .catch((err)=>{
         next(err)
