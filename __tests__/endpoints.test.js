@@ -176,3 +176,22 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
         })
     })
 })
+
+describe("POST: /api/articles/:article_id/comments", ()=>{
+    test.only("201: Adds a comment to the comment table and responds with the new comment", ()=>{
+        const comment = {
+            username: "Obi-John--Kenobi",
+            body: "Hello there"
+        };
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(comment)
+        .expect(201)
+        .then(({ body })=>{
+            console.log(body)
+            expect(body).toMatchObject({
+                postedComment: "Hello there"
+            })
+        })
+    })
+})

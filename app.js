@@ -3,7 +3,7 @@ const express = require("express");
 const { getAllTopics } = require("./controllers/topics.controllers")
 const { getAllEndpoints } = require("./controllers/endpoints.controllers")
 const { getAllArticles, getArticleById } = require("./controllers/articles.controllers")
-const { getCommentsByArticleId } = require("./controllers/comments.controllers")
+const { getCommentsByArticleId, postCommentByArticleId } = require("./controllers/comments.controllers")
 
 const app = express()
 
@@ -18,6 +18,8 @@ app.get("/api/articles", getAllArticles)
 app.get("/api/articles/:article_id", getArticleById)
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId)
 
 app.use((err, req, res, next)=>{
   if (err.code === "22P02"){
