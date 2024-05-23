@@ -29,7 +29,6 @@ exports.postCommentByArticleId = async (req, res, next)=>{
    
     Promise.all(promises)
     .then((resolvedPromises)=>{
-        console.log(resolvedPromises)
         const postedComment = resolvedPromises[0];
         res.status(201).send({ postedComment })
     })
