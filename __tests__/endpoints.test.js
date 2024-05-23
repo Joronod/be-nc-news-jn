@@ -150,4 +150,20 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             })
         })
     })
+    test("404: ERROR - responds with an error when the id is valid, but does not exist", ()=>{
+        return request(app)
+        .get("/api/articles/9876/comments")
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+    test("400: ERROR - responds with an error when an invalid id is used", ()=>{
+        return request(app)
+        .get("/api/articles/not-an-id/comments")
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
 })
