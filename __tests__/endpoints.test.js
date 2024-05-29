@@ -4,6 +4,9 @@ const db = require("../db/connection");
 const seed = require("../db//seeds/seed");
 const data = require("../db/data/test-data");
 // const Test = require("supertest/lib/test");
+const endpoints = require("../endpoints.json")
+
+
 
 afterAll(() => {
     return db.end();
@@ -27,6 +30,18 @@ describe("Get: /api/topics", ()=>{
                     slug: expect.any(String)
                 })
             })
+        })
+    })
+})
+
+describe("GET: /api", ()=>{
+    test("200: responds with an object describing all endpoints", ()=>{
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body })=>{
+            const { msg } = body
+            expect(msg).toEqual(endpoints)  
         })
     })
 })
