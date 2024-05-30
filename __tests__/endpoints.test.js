@@ -127,6 +127,7 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             const { comments } = body
             expect(comments).toHaveLength(11)
             comments.forEach((comment)=>{
+                expect(comment.article_id).toBe(1)
                 expect(comment).toMatchObject({
                     comment_id: expect.any(Number),
                     votes: expect.any(Number),
@@ -166,7 +167,7 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             expect(body.msg).toBe("Bad request")
         })
     })
-    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+    test("200: when valid ID, but has no comments responds with an empty array of comments", ()=>{
         return request(app)
         .get("/api/articles/2/comments")
         .expect(200)
