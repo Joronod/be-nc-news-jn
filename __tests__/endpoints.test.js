@@ -117,3 +117,62 @@ describe("GET: /api/articles", ()=>{
         })
     })
 })
+
+describe("GET: /api/articles/:article_id/comments", ()=>{
+    test("200: responds with an array of comments relating to the given article", ()=>{
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body })=>{
+            const { comments } = body
+            expect(comments).toHaveLength(11)
+            comments.forEach((comment)=>{
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number),
+                    created_at: expect.any(String)
+                })
+            })
+        })
+    })
+    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body })=>{
+            const { comments } = body;
+            expect(comments[0].created_at).toBe("2020-11-03T21:00:00.000Z")
+            expect(comments).toBeSortedBy("created_at", {
+                descending: true
+            })
+        })
+    })
+    test("404: ERROR - responds with an error when the id is valid, but does not exist", ()=>{
+        return request(app)
+        .get("/api/articles/9876/comments")
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+    test("400: ERROR - responds with an error when an invalid id is used", ()=>{
+        return request(app)
+        .get("/api/articles/not-an-id/comments")
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+        return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body })=>{
+            const { comments } = body;
+            expect(comments).toEqual([])
+        })
+    })
+})
