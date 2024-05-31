@@ -239,3 +239,75 @@ describe("POST: /api/articles/:article_id/comments", ()=>{
         })
     })
 })
+
+describe("PATCH: /api/articles/:article_id", ()=>{
+    test("200: Responds with the updated article", ()=>{
+        const updatedVotes = {
+            inc_votes : 66
+        }
+        return request(app)
+        .patch("/api/articles/1")
+        .send(updatedVotes)
+        .expect(200)
+        .then(({ body })=>{
+            expect(body.updatedArticle).toMatchObject({
+                article_id : 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: "2020-07-09T20:11:00.000Z",
+                votes: 166,
+                article_img_url:
+                    "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            })
+        })
+    })
+    test("400: ERROR responds with error message when a number is not passed for the body", ()=>{
+        const updatedVotes = {
+            inc_votes : "sixtySix"
+        }
+        return request(app)
+        .patch("/api/articles/1")
+        .send(updatedVotes)
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    test("404: ERROR - responds with an error when the id is valid, but does not exist", ()=>{
+        const updatedVotes = {
+            inc_votes : 66
+        }
+        return request(app)
+        .patch("/api/articles/9876")
+        .send(updatedVotes)
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+    test("400: ERROR - responds with an error when an invalid id is used", ()=>{
+        const updatedVotes = {
+            inc_votes : 66
+        }
+        return request(app)
+        .patch("/api/articles/not-an-id")
+        .send(updatedVotes)
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    test("400: ERROR - responds with an error when an empty body is used", ()=>{
+        const updatedVotes = {
+        }
+        return request(app)
+        .patch("/api/articles/1")
+        .send(updatedVotes)
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+})

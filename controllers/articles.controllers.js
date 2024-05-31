@@ -1,5 +1,5 @@
 const { promises } = require("supertest/lib/test")
-const { selectAllArticles, selectArticleById } = require("../models/articles.models")
+const { selectAllArticles, selectArticleById, updateArticleByArticleId, checkArticleExists } = require("../models/articles.models")
 const { selectNumberOfComments } = require("../models/comments.models")
 
 exports.getArticleById = (req, res, next) =>{
@@ -29,3 +29,17 @@ exports.getAllArticles = async (req, res, next) => {
     }
 }
 
+exports.patchArticleByArticleId = async (req, res, next) => {
+    const { article_id } = req.params
+    const vote = req.body.inc_votes
+
+    try{
+    const articleExists = await checkArticleExists(article_id);
+    const updatedArticle = await updateArticleByArticleId(article_id, vote);
+    res.status(200).send({ updatedArticle })
+    }
+
+    catch(err){
+        next(err)
+    }
+}
