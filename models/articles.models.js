@@ -1,4 +1,4 @@
-const { notify } = require("../app");
+const { notify, post } = require("../app");
 const db = require("../db/connection")
 const format = require("pg-format");
 
@@ -23,6 +23,7 @@ exports.checkArticleExists = (article_id)=>{
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then(({ rows })=>{
         if(rows.length === 0){
+            console.log(rows, "rows in checkArticleExists")
                 return Promise.reject({ status: 404, msg:"Not Found" })
         };
         return rows[0]
@@ -31,8 +32,9 @@ exports.checkArticleExists = (article_id)=>{
 
 
 exports.updateArticleByArticleId = (article_id, vote)=>{
-   return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`, [vote, article_id])
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;`, [vote, article_id])
     .then(({ rows })=>{
+        console.log(rows, "rows in updateArticle")
         return rows[0]
     })
 

@@ -32,14 +32,16 @@ exports.getAllArticles = async (req, res, next) => {
 exports.patchArticleByArticleId = async (req, res, next) => {
     const { article_id } = req.params
     const vote = req.body.inc_votes
+    console.log(article_id, vote, "params in patchController")
 
     try{
-    const articleExists = await checkArticleExists(article_id);
+    await checkArticleExists(article_id);
     const updatedArticle = await updateArticleByArticleId(article_id, vote);
     res.status(200).send({ updatedArticle })
     }
 
     catch(err){
+        console.log(err, "patch err")
         next(err)
     }
 }

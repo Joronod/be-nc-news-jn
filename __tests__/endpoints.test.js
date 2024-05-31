@@ -313,9 +313,25 @@ describe("PATCH: /api/articles/:article_id", ()=>{
 })
 
 describe("DELETE: /api/comments/:comment_id", ()=>{
-    test.only("204: Should return with a status and no content, having removed the comment",()=>{
+    test("204: Should return with a status and no content, having removed the comment",()=>{
         return request(app)
-        .delete("/api/comments/1")
+        .delete("/api/comments/2")
         .expect(204)
+    })
+    test("404: ERROR should respond with an error when the id is valid but does not exist", ()=>{
+        return request(app)
+        .delete("/api/comments/9876")
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+    test("400: ERROR should respond with an error when invalid comment_id is used", ()=>{
+        return request(app)
+        .delete("/api/comments/notAComment")
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
     })
 })

@@ -39,11 +39,10 @@ exports.postCommentByArticleId = async (req, res, next)=>{
 
 exports.deleteCommentByCommentId = async (req, res, next)=>{
     const { comment_id } = req.params
-    console.log(comment_id)
-
+  
     try{
-        const checkCommentExists = await selectCommentsByCommentId(comment_id)
-        const deletedComment = await deletingCommentByCommentId(comment_id)
+        await selectCommentsByCommentId(comment_id)
+        await deletingCommentByCommentId(comment_id)
         res.status(204).end()
     }
     catch(err){

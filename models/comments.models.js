@@ -31,10 +31,8 @@ exports.insertNewCommentByArticleId = (article_id, newComment) =>{
 }
 
 exports.selectCommentsByCommentId = (comment_id) =>{
-    console.groupCollapsed(comment_id, "comment_id in selectComment")
     return db.query(`SELECT * FROM comments WHERE comment_id = $1;`, [comment_id])
     .then(({ rows })=>{
-        console.log(rows, "rows in selectComment")
         if(rows.length === 0){
             return Promise.reject({ status: 404, msg:"Not Found" })
         };
@@ -45,7 +43,6 @@ exports.selectCommentsByCommentId = (comment_id) =>{
 exports.deletingCommentByCommentId = (comment_id) =>{
     return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [comment_id])
     .then(({ rows })=>{
-        console.log(rows, "rows in deleting Comments")
         return rows[0]
     })
 
