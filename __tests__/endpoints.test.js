@@ -311,3 +311,11 @@ describe("PATCH: /api/articles/:article_id", ()=>{
         })
     })
 })
+
+describe("DELETE: /api/comments/:comment_id", ()=>{
+    test.only("204: Should return with a status and no content, having removed the comment",()=>{
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+    })
+})

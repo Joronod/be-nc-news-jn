@@ -1,4 +1,4 @@
-const { selectCommentsByArticleId, insertNewCommentByArticleId } = require("../models/comments.models");
+const { selectCommentsByCommentId, selectCommentsByArticleId, insertNewCommentByArticleId, deletingCommentByCommentId } = require("../models/comments.models");
 const { checkArticleExists } = require("../models/articles.models");
 const { checkUserExists } = require("../models/users.models")
 
@@ -35,4 +35,18 @@ exports.postCommentByArticleId = async (req, res, next)=>{
     .catch((err)=>{
         next(err)
     })
+}
+
+exports.deleteCommentByCommentId = async (req, res, next)=>{
+    const { comment_id } = req.params
+    console.log(comment_id)
+
+    try{
+        const checkCommentExists = await selectCommentsByCommentId(comment_id)
+        const deletedComment = await deletingCommentByCommentId(comment_id)
+        res.status(204).end()
+    }
+    catch(err){
+        next(err)
+    }
 }
