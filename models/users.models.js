@@ -1,10 +1,11 @@
 const db = require("../db/connection")
 const format = require("pg-format");
 
-exports.selectAuthorByUsername = (username) =>{
+exports.checkUserExists = (username) =>{
     return db.query(`SELECT name FROM users WHERE username = $1;`, [username])
     .then(({ rows })=>{
-    const author = rows[0].name
-    return author
+        if(rows.length === 0){
+            return Promise.reject({ status: 404, msg:"Not Found" })
+        };
     })
 }

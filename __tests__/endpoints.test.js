@@ -166,7 +166,7 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             expect(body.msg).toBe("Bad request")
         })
     })
-    test("200: responds with an array that is ordered by date created in descending order", ()=>{
+    test("200: when valid ID, but has no comments responds with an empty array of comments", ()=>{
         return request(app)
         .get("/api/articles/2/comments")
         .expect(200)
@@ -188,9 +188,53 @@ describe("POST: /api/articles/:article_id/comments", ()=>{
         .send(comment)
         .expect(201)
         .then(({ body })=>{
-            expect(body).toMatchObject({
-                postedComment: "Hello there"
-            })
+            expect(body.postedComment).toMatchObject({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                author: expect.any(String),
+                body: expect.any(String),
+                article_id: expect.any(Number),
+                created_at: expect.any(String),
+              });
+        })
+    })
+    test("404: ERROR - responds with an error when the id is valid, but does not exist", ()=>{
+        const comment = {
+            username: "lurker",
+            body: "Hello there"
+        }
+        return request(app)
+        .post("/api/articles/9876/comments")
+        .send(comment)
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
+        })
+    })
+    test("400: ERROR - responds with an error when an invalid id is used", ()=>{
+        const comment = {
+            username: "lurker",
+            body: "Hello there"
+        }
+        return request(app)
+        .post("/api/articles/chickenNuggets/comments")
+        .send(comment)
+        .expect(400)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    test("404: ERROR - responds with an error when an invalid or missing field is used", ()=>{
+        const comment = {
+            username: "Thom",
+            body: "for a minute there, I lost myself"
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(comment)
+        .expect(404)
+        .then(({ body })=>{
+            expect(body.msg).toBe("Not Found")
         })
     })
 })
