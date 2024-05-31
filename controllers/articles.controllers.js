@@ -1,4 +1,3 @@
-const { promises } = require("supertest/lib/test")
 const { selectAllArticles, selectArticleById, updateArticleByArticleId, checkArticleExists } = require("../models/articles.models")
 const { selectNumberOfComments } = require("../models/comments.models")
 
