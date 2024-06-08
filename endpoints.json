@@ -92,5 +92,20 @@
     "description": "allows a user to delete a comment by the comment_id",
     "queries" : "A valid comment_id Number",
     "exampleResponse" : {}
+  },
+  "GET /api/articles? topic query" : {
+    "description": "allows a user to query the articles and return any articles with a matching topic",
+      "queries" : "A valid article topic. Invalid topics will return an empty array",
+      "exampleResponse" : {
+        "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 100,
+          "article_img_url":
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"         
+      }
   }
 }
