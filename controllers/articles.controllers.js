@@ -1,15 +1,16 @@
 const { selectAllArticles, selectArticleById, updateArticleByArticleId, checkArticleExists, selectArticlesByQuery } = require("../models/articles.models")
 const { selectNumberOfComments } = require("../models/comments.models")
 
-exports.getArticleById = (req, res, next) => {
+exports.getArticleById = async (req, res, next) => {
     const { article_id } = req.params
-    return selectArticleById(article_id)
-    .then((article) => {
-        res.status(200).send({ article })
-    })
-    .catch((err) => {
+    try{
+        const article = await selectArticleById(article_id)
+        const noOfComments = await selectNumberOfComments(article_id)
+        Promise.all([article, noOfComments])
+        res.status(200).send({ article: { ...article, comments: noOfComments } })
+    } catch(err) {
         next(err)
-    })
+    }
 }
 
 exports.getAllArticles = async (req, res, next) => {
