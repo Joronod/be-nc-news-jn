@@ -37,3 +37,19 @@ exports.updateArticleByArticleId = (article_id, vote)=>{
     })
 
 }
+
+exports.selectArticlesByQuery = (query)=>{
+    let queryValues = [];
+    let queryStr = "SELECT * FROM articles"
+    if(query){
+        queryValues.push(query)
+        console.log(queryValues)
+        queryStr += ` WHERE topic LIKE $1;`
+    }
+    return db
+    .query(queryStr, queryValues)
+    .then(({ rows })=>{
+        console.log(rows)
+        return rows
+    })
+}

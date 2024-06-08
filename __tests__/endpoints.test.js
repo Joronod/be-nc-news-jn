@@ -353,3 +353,36 @@ describe("Get: /api/users", ()=>{
         })
     })
 })
+describe("Get: /api/articles/topicQuery", ()=>{
+    test("200: responds with a array of articles filtered to include the topic", ()=>{
+        return request(app)
+        .get("/api/articles?query=mitch")
+        .expect(200)
+        .then(({ body })=>{
+            const { articles } = body
+            expect(articles).toHaveLength(12)
+            articles.forEach((article)=>{
+                expect(article.topic).toBe("mitch");
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comments : expect.any(Number)
+                })
+            })
+        })
+    })
+    test("200: responds with an empty array when no articles match the query", () => {
+        return request(app)
+        .get("/api/articles?query=notatopic")
+        .expect(200)
+        .then(({ body }) => {
+            const { articles } = body;
+            expect(articles).toEqual([]);
+        })
+    })
+})
