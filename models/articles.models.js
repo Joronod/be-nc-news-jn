@@ -12,12 +12,21 @@ exports.selectArticleById = (article_id)=>{
     })
 }
 
-exports.selectAllArticles = ()=>{
-    return db.query(`SELECT article_id, title, topic, author, created_at, votes, article_img_url FROM articles ORDER BY created_at DESC;`)
-    .then(({ rows })=>{
-        return rows
-    })
-}
+exports.selectAllArticles = (sort_by = 'created_at', order = 'desc') => {
+    const validSortColumns = ['article_id', 'title', 'topic', 'author', 'created_at', 'votes', 'article_img_url'];
+    if (!validSortColumns.includes(sort_by)) {
+        sort_by = 'created_at';
+    }
+    const validOrder = ['asc', 'desc'];
+    if (!validOrder.includes(order)) {
+        order = 'desc';
+    }
+    const queryStr = format(`SELECT article_id, title, topic, author, created_at, votes, article_img_url FROM articles ORDER BY %I %s;`, sort_by, order);
+    return db.query(queryStr)
+        .then(({ rows }) => {
+            return rows;
+        });
+};
 
 exports.checkArticleExists = (article_id)=>{
     return db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
@@ -38,14 +47,18 @@ exports.updateArticleByArticleId = (article_id, vote)=>{
 
 }
 
-exports.selectArticlesByQuery = (topic) => {
-    let queryValues = [];
-    let queryStr = "SELECT * FROM articles";
-    if (topic) {
-        queryValues.push(topic);
-        queryStr += ` WHERE topic = $1;`;
+exports.selectArticlesByQuery = (topic, sort_by = 'created_at', order = 'desc') => {
+    const validSortColumns = ['article_id', 'title', 'topic', 'author', 'created_at', 'votes', 'article_img_url'];
+    if (!validSortColumns.includes(sort_by)) {
+        sort_by = 'created_at';
     }
-    return db.query(queryStr, queryValues).then(({ rows }) => {
-        return rows;
-    });
+    const validOrder = ['asc', 'desc'];
+    if (!validOrder.includes(order)) {
+        order = 'desc';
+    }
+    const queryStr = format(`SELECT * FROM articles WHERE topic = $1 ORDER BY %I %s;`, sort_by, order);
+    return db.query(queryStr, [topic])
+        .then(({ rows }) => {
+            return rows;
+        });
 };

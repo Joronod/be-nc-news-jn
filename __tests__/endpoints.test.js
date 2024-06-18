@@ -357,7 +357,7 @@ describe("Get: /api/users", ()=>{
 describe("Get: /api/articles/topicQuery", ()=>{
     test("200: responds with a array of articles filtered to include the topic", ()=>{
         return request(app)
-        .get("/api/articles?query=mitch")
+        .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({ body })=>{
             const { articles } = body
@@ -379,7 +379,7 @@ describe("Get: /api/articles/topicQuery", ()=>{
     })
     test("200: responds with an empty array when no articles match the query", () => {
         return request(app)
-        .get("/api/articles?query=notatopic")
+        .get("/api/articles?topic=notatopic")
         .expect(200)
         .then(({ body }) => {
             const { articles } = body;

@@ -14,20 +14,14 @@ exports.getArticleById = async (req, res, next) => {
 }
 
 exports.getAllArticles = async (req, res, next) => {
-    const { topic } = req.query;
+    const { topic, sort_by = 'created_at', order = 'desc' } = req.query;
     try {
+        let articles;
         if (topic) {
-            const articlesWithQuery = await selectArticlesByQuery(topic);
-            const articlesWithComments = await Promise.all(
-                articlesWithQuery.map(async (article) => {
-                    const noOfComments = await selectNumberOfComments(article.article_id);
-                    return { ...article, comments: noOfComments };
-                })
-            );
-            return res.status(200).send({ articles: articlesWithComments });
+            articles = await selectArticlesByQuery(topic, sort_by, order);
+        } else {
+            articles = await selectAllArticles(sort_by, order);
         }
-        
-        const articles = await selectAllArticles();
         const articlesWithComments = await Promise.all(
             articles.map(async (article) => {
                 const noOfComments = await selectNumberOfComments(article.article_id);
