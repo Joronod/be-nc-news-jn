@@ -38,16 +38,14 @@ exports.updateArticleByArticleId = (article_id, vote)=>{
 
 }
 
-exports.selectArticlesByQuery = (query)=>{
+exports.selectArticlesByQuery = (topic) => {
     let queryValues = [];
-    let queryStr = "SELECT * FROM articles"
-    if(query){
-        queryValues.push(query)
-        queryStr += ` WHERE topic LIKE $1;`
+    let queryStr = "SELECT * FROM articles";
+    if (topic) {
+        queryValues.push(topic);
+        queryStr += ` WHERE topic = $1;`;
     }
-    return db
-    .query(queryStr, queryValues)
-    .then(({ rows })=>{
-        return rows
-    })
-}
+    return db.query(queryStr, queryValues).then(({ rows }) => {
+        return rows;
+    });
+};

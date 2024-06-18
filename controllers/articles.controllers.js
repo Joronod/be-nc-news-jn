@@ -14,10 +14,10 @@ exports.getArticleById = async (req, res, next) => {
 }
 
 exports.getAllArticles = async (req, res, next) => {
-    const { query } = req.query;
+    const { topic } = req.query;
     try {
-        if (query) {
-            const articlesWithQuery = await selectArticlesByQuery(query);
+        if (topic) {
+            const articlesWithQuery = await selectArticlesByQuery(topic);
             const articlesWithComments = await Promise.all(
                 articlesWithQuery.map(async (article) => {
                     const noOfComments = await selectNumberOfComments(article.article_id);
@@ -36,9 +36,9 @@ exports.getAllArticles = async (req, res, next) => {
         );
         res.status(200).send({ articles: articlesWithComments });
     } catch (err) {
-        next(err)
+        next(err);
     }
-}
+};
 
 exports.patchArticleByArticleId = async (req, res, next) => {
     const { article_id } = req.params
