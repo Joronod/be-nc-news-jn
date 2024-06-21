@@ -117,6 +117,66 @@ describe("GET: /api/articles", ()=>{
             })
         })
     })
+    test("200: responds with articles sorted by title in ascending order", () => {
+        return request(app)
+            .get("/api/articles?sort_by=title&order=asc")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("title", { ascending: true });
+            });
+    });
+
+    test("200: responds with articles sorted by title in descending order", () => {
+        return request(app)
+            .get("/api/articles?sort_by=title&order=desc")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("title", { descending: true });
+            });
+    });
+
+    test("200: responds with articles sorted by votes in ascending order", () => {
+        return request(app)
+            .get("/api/articles?sort_by=votes&order=asc")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("votes", { ascending: true });
+            });
+    });
+
+    test("200: responds with articles sorted by votes in descending order", () => {
+        return request(app)
+            .get("/api/articles?sort_by=votes&order=desc")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("votes", { descending: true });
+            });
+    });
+
+    test("200: responds with articles sorted by created_at when given an invalid sort_by parameter", () => {
+        return request(app)
+            .get("/api/articles?sort_by=invalid_column")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+
+    test("200: responds with articles sorted in descending order when given an invalid order parameter", () => {
+        return request(app)
+            .get("/api/articles?order=invalid_order")
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(articles).toBeSortedBy("created_at", { descending: true });
+            });
+    });
+
 })
 
 describe("GET: /api/articles/:article_id/comments", ()=>{
@@ -152,6 +212,7 @@ describe("GET: /api/articles/:article_id/comments", ()=>{
             })
         })
     })
+
     test("404: ERROR - responds with an error when the id is valid, but does not exist", ()=>{
         return request(app)
         .get("/api/articles/9876/comments")
@@ -387,3 +448,4 @@ describe("Get: /api/articles/topicQuery", ()=>{
         })
     })
 })
+
