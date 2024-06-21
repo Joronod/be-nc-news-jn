@@ -40,6 +40,7 @@ describe("GET: /api", ()=>{
         .expect(200)
         .then(({ body })=>{
             const { msg } = body
+            console.log(msg)
             expect(msg).toEqual(endpoints)  
         })
     })

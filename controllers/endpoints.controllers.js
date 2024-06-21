@@ -8,7 +8,4 @@ exports.getAllEndpoints = (req, res, next)=>{
     .then((results)=>{
         return res.status(200).send({status: 200, msg: JSON.parse(results)})
     })
-    .catch((err)=>{
-        next(err)
-    })
 }
