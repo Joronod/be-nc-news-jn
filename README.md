@@ -55,3 +55,35 @@ npm run test
 You will need:
 * Node.js: v14.x or higher
 * PostgreSQL: v12.x or higher
+
+## Bug
+Currently, the api is experiencing an internal issue that is scheduled for fixing. In the meantime, the /api route is unavailable.
+
+Please use the following endpoints to access the data stored in the api:
+
+GET:
+
+/api/topics : Serves an array of all topics.
+
+/api/users : Serves an array of all users.
+
+/api/articles : Serves an array of all articles, ordered by created_at in descening order, and without the body of the article.
+
+/api/articles/:article_id : Serves an object containing the article associated with the given article_id and the number of comments it has.
+
+/api/articles/:article_id/comments : Serves an array of objects containing the comments associated with the given article_id.
+
+/api/articles? topic query : Allows a user to query the articles and return any articles with a matching topic.
+
+POST:
+
+/api/articles/:article_id/comments : Allows a user to post a comment to a given article by article number.
+
+PATCH:
+
+/api/articles/:article_id : Allows a user to patch the number of votes on an article.
+
+DELETE:
+
+/api/comments/:comment_id : Allows a user to delete a comment by the comment_id.
+
